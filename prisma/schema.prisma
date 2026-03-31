@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Purchase {
+  id                      String   @id @default(cuid())
+  email                   String
+  customerName            String?
+  productId               String
+  amount                  Int
+  currency                String   @default("jpy")
+  status                  String
+  stripeCheckoutSessionId String   @unique
+  stripePaymentIntentId   String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+model StudyProgress {
+  id           String   @id @default(cuid())
+  email        String
+  vocabularyId String
+  isSaved      Boolean  @default(false)
+  isLearned    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([email, vocabularyId])
+}

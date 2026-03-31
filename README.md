@@ -1,16 +1,72 @@
-# React + Vite
+# N1 Vocabulary App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A mobile-first vocabulary learning platform built with Next.js, TypeScript, Tailwind CSS, Prisma, and Stripe. The product is designed for Japanese language learners and includes a production-ready checkout flow that supports PayPay in Japan through Stripe Checkout.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Prisma with SQLite for local development
+- Stripe Checkout + webhooks
+- Zod validation
 
-## React Compiler
+## Features Included
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Mobile-first landing page and pricing flow
+- Study screen with vocabulary browsing, search, bookmarking, and progress tracking in the UI
+- Server-side checkout endpoint
+- Stripe webhook handler for purchase fulfillment
+- Local database schema for purchases and study progress
+- Environment template for Stripe and app configuration
 
-## Expanding the ESLint configuration
+## PayPay Notes
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The current payment integration uses Stripe Checkout with `paypay` enabled for one-time payments in JPY. This is a practical way to launch online payments for customers in Japan.
+
+Important limitation:
+
+- PayPay through Stripe is for one-time payments, not subscriptions
+
+If you later want recurring billing, we should add card subscriptions separately while keeping PayPay for one-time purchases.
+
+## PDF Import
+
+The current app includes sample N1 vocabulary data so the product is immediately usable. Once you add your PDF to the workspace, we can replace the sample content with your actual reference data and build a proper import pipeline.
+
+## Local Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Copy the environment template:
+
+```bash
+cp .env.example .env
+```
+
+3. Generate Prisma client and create the local database:
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate -- --name init
+```
+
+4. Start the app:
+
+```bash
+npm run dev
+```
+
+## Stripe Webhook
+
+For local webhook testing with Stripe CLI:
+
+```bash
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+```
+
+Then add the signing secret shown by Stripe CLI into `STRIPE_WEBHOOK_SECRET`.
