@@ -1,19 +1,6 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP, Outfit } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
-
-const notoSansJp = Noto_Sans_JP({
-  variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "800"],
-});
-
-const outfit = Outfit({
-  variable: "--font-heading",
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-});
 
 export const metadata: Metadata = {
   title: "N1 Vocabulary App",
@@ -27,7 +14,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${notoSansJp.variable} ${outfit.variable}`}>
+    <html lang="en">
       <body className="font-[var(--font-body)] antialiased">{children}</body>
     </html>
   );

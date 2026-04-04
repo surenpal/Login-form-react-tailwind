@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
 :root {
+  --font-body:
+    "Yu Gothic UI", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo",
+    "Noto Sans JP", sans-serif;
+  --font-heading:
+    "Aptos Display", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --background: #f4efe6;
   --foreground: #1f1722;
   --card: rgba(255, 251, 245, 0.82);
