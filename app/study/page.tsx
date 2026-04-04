@@ -1,6 +1,6 @@
 import { StudyDeck } from "@/components/study/study-deck";
 import { AppHeader } from "@/components/shared/app-header";
-import { sampleVocabulary } from "@/data/sample-vocabulary";
+import { importedVocabulary } from "@/data/imported-vocabulary";
 
 export default function StudyPage() {
   return (
@@ -17,22 +17,22 @@ export default function StudyPage() {
                 JLPT N1 vocabulary trainer
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--ink-soft)] md:text-base">
-                This starter includes sample data so the product is usable today.
-                When you add your PDF, we can replace these cards with your real
-                N1 reference set.
+                This deck is loaded from the ARK ACADEMY N1 vocabulary PDF so
+                learners can browse the imported book content directly in the
+                app. Use search and pagination to move through the full deck.
               </p>
             </div>
             <div className="rounded-3xl bg-white/70 px-4 py-3 text-sm text-[var(--ink-soft)]">
               <span className="font-semibold text-[var(--foreground)]">
-                {sampleVocabulary.length}
+                {importedVocabulary.length}
               </span>{" "}
-              starter words loaded
+              imported entries loaded
             </div>
           </div>
         </div>
       </section>
       <section className="section-shell mt-6">
-        <StudyDeck words={sampleVocabulary} />
+        <StudyDeck words={importedVocabulary} />
       </section>
     </main>
   );

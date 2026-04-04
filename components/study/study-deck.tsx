@@ -1,18 +1,28 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Bookmark, BookOpen, Search, Sparkles } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Bookmark,
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  Sparkles,
+} from "lucide-react";
 import type { VocabularyWord } from "@/types";
 
 type StudyDeckProps = {
   words: VocabularyWord[];
 };
 
+const ITEMS_PER_PAGE = 12;
+
 export function StudyDeck({ words }: StudyDeckProps) {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [revealedIds, setRevealedIds] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
 
   const categories = useMemo(
     () => ["All", ...new Set(words.map((word) => word.category))],
@@ -28,6 +38,22 @@ export function StudyDeck({ words }: StudyDeckProps) {
       return matchesCategory && lookup.includes(query.toLowerCase());
     });
   }, [query, selectedCategory, words]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredWords.length / ITEMS_PER_PAGE));
+  const paginatedWords = useMemo(() => {
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    return filteredWords.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredWords, page]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, selectedCategory]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   function toggleSaved(id: string) {
     setSavedIds((current) =>
@@ -78,10 +104,52 @@ export function StudyDeck({ words }: StudyDeckProps) {
             })}
           </div>
         </div>
+        <div className="mt-4 flex flex-col gap-3 border-t border-[var(--border)] pt-4 text-sm text-[var(--ink-soft)] md:flex-row md:items-center md:justify-between">
+          <p>
+            Showing{" "}
+            <span className="font-semibold text-[var(--foreground)]">
+              {filteredWords.length === 0 ? 0 : (page - 1) * ITEMS_PER_PAGE + 1}
+            </span>
+            {" - "}
+            <span className="font-semibold text-[var(--foreground)]">
+              {Math.min(page * ITEMS_PER_PAGE, filteredWords.length)}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-[var(--foreground)]">
+              {filteredWords.length}
+            </span>{" "}
+            results
+          </p>
+          <div className="flex items-center gap-2 self-start md:self-auto">
+            <button
+              type="button"
+              onClick={() => setPage((current) => Math.max(1, current - 1))}
+              disabled={page === 1}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white/75 px-4 py-2 font-medium text-[var(--foreground)] transition disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Prev
+            </button>
+            <span className="rounded-full bg-white/80 px-4 py-2 font-medium text-[var(--foreground)]">
+              Page {page} / {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                setPage((current) => Math.min(totalPages, current + 1))
+              }
+              disabled={page === totalPages}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-white/75 px-4 py-2 font-medium text-[var(--foreground)] transition disabled:cursor-not-allowed disabled:opacity-45"
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {filteredWords.map((word) => {
+      <div className="grid gap-4 md:grid-cols-2">
+        {paginatedWords.map((word) => {
           const saved = savedIds.includes(word.id);
           const revealed = revealedIds.includes(word.id);
 
@@ -162,6 +230,13 @@ export function StudyDeck({ words }: StudyDeckProps) {
           );
         })}
       </div>
+
+      {filteredWords.length === 0 ? (
+        <div className="paper-panel rounded-[28px] p-8 text-center text-sm leading-7 text-[var(--ink-soft)]">
+          No vocabulary matched your current search. Try a different keyword or
+          reset the category filter.
+        </div>
+      ) : null}
     </section>
   );
 }

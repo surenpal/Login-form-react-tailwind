@@ -1,15 +1,15 @@
 import Link from "next/link";
-import { sampleVocabulary } from "@/data/sample-vocabulary";
+import { importedVocabulary } from "@/data/imported-vocabulary";
 
 export function VocabPreview() {
-  const featuredWords = sampleVocabulary.slice(0, 4);
+  const featuredWords = importedVocabulary.slice(0, 4);
 
   return (
     <section className="paper-panel rounded-[32px] p-6">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[var(--accent-deep)]">
-            Sample Deck
+            Imported Deck
           </p>
           <h2 className="mt-3 font-[var(--font-heading)] text-2xl font-semibold md:text-3xl">
             Vocabulary preview
